@@ -1,0 +1,52 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+env/
+venv/
+ENV/
+
+# Logs & data
+errors.log
+*.csv
+
+# Node.js / frontend
+node_modules/
+dist/
+build/
+*.log
+
+# Vite
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Sensitive environment files - CRITICAL: Never commit secrets!
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Backup files
+config.py.bak
+*.bak
+
+# Test outputs
+tests/__pycache__/
+.pytest_cache/
+
+# Archive (kept locally, not part of active project
+_ARCHIVE/
