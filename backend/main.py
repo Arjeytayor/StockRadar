@@ -1,9 +1,10 @@
 """FastAPI server that exposes the StockRadar screener."""
+import os
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
-import asyncio
 
 from scoring import (
     DEFAULT_WATCHLIST,
@@ -31,10 +32,12 @@ import pandas as pd
 
 app = FastAPI(title="StockRadar API", version="2.0")
 
-# Allow the frontend (localhost:5173) and mobile WebViews to call us
+# Allow the frontend (localhost:5173 by default) to call us.
+# Set CORS_ORIGINS to a comma-separated list of domains in production.
+_cors_origins = os.getenv("CORS_ORIGINS", "http://localhost:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten to your domain in production
+    allow_origins=[o.strip() for o in _cors_origins.split(",")],
     allow_methods=["*"],
     allow_headers=["*"],
 )

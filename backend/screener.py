@@ -12,6 +12,7 @@ Main script that orchestrates screening, scoring, backtesting, and alerts.
 
 import argparse
 import logging
+import os
 import sys
 import time
 from datetime import datetime
@@ -48,11 +49,13 @@ from telegram_alert import format_telegram_message, send_telegram_alert
 # ---------------------------------------------------------------------------
 # Logging setup
 # ---------------------------------------------------------------------------
+_LOG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "errors.log")
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
-        logging.FileHandler("C:/Users/DELL/Documents/StockRadar/errors.log"),
+        logging.FileHandler(_LOG_PATH),
         logging.StreamHandler(sys.stdout),
     ],
 )

@@ -614,12 +614,13 @@ def score_crypto_momentum(data: dict, btc_hist: pd.DataFrame = None) -> float:
 
     # 1-month and 3-month (approx 30 & 90 days for crypto trades 24/7)
     month1_return = (closes.iloc[-1] - closes.iloc[-30]) / closes.iloc[-30]
-    month3_return = (closes.iloc[-1] - closes.iloc[min(90, len(closes) - 1)]) / closes.iloc[min(90, len(closes) - 1)]
+    month3_idx = -min(90, len(closes) - 1)
+    month3_return = (closes.iloc[-1] - closes.iloc[month3_idx]) / closes.iloc[month3_idx]
 
     # BTC comparison
     if btc_hist is not None and not btc_hist.empty and len(btc_hist) >= 30:
         btc_1m = (btc_hist["Close"].iloc[-1] - btc_hist["Close"].iloc[-30]) / btc_hist["Close"].iloc[-30]
-        btc_3m_idx = min(90, len(btc_hist) - 1)
+        btc_3m_idx = -min(90, len(btc_hist) - 1)
         btc_3m = (btc_hist["Close"].iloc[-1] - btc_hist["Close"].iloc[btc_3m_idx]) / btc_hist["Close"].iloc[btc_3m_idx]
     else:
         btc_1m = 0.0

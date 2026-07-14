@@ -17,17 +17,21 @@ StockRadar/
 │   ├── backtest.py
 │   ├── telegram_alert.py
 │   ├── config.py
-│   └── requirements.txt
+│   ├── tests/           ← pytest suite (scoring/backtest logic)
+│   ├── requirements.txt
+│   └── requirements-dev.txt
 ├── frontend/        ← React + Vite (web UI)
 │   ├── src/
 │   │   ├── App.jsx
 │   │   └── main.jsx
+│   ├── .env.example
 │   ├── package.json
 │   └── vite.config.js
 ├── .github/
 │   └── workflows/
-│       └── ci.yml  ← GitHub Actions CI (lint + build)
+│       └── ci.yml  ← GitHub Actions CI (compile check + pytest + frontend build)
 ├── .gitignore
+├── LICENSE
 └── README.md
 ```
 
@@ -42,7 +46,7 @@ StockRadar/
 ### 1️⃣ Clone & Setup (first time)
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Arjeytayor/StockRadar.git
 cd StockRadar
 
 # Python backend
@@ -54,7 +58,23 @@ cd frontend
 npm install
 ```
 
-### 2️⃣ Run the Web App
+### 2️⃣ Configure environment (optional)
+
+Both apps work out of the box on localhost with no configuration. To override defaults:
+
+**Backend** (`backend/.env`):
+```env
+TELEGRAM_BOT_TOKEN=your-bot-token-here
+TELEGRAM_CHAT_ID=your-chat-id-here
+CORS_ORIGINS=http://localhost:5173   # comma-separated list of allowed frontend origins
+```
+
+**Frontend** (`frontend/.env`, copy from `frontend/.env.example`):
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+### 3️⃣ Run the Web App
 
 **Terminal 1 — Backend:**
 ```bash
@@ -88,11 +108,7 @@ The bot sends daily/scheduled stock and crypto alerts with:
 
 1. Create a bot with [@BotFather](https://t.me/BotFather)
 2. Get your `BOT_TOKEN` and `CHAT_ID`
-3. Create `backend/.env`:
-```env
-TELEGRAM_BOT_TOKEN=your-bot-token-here
-TELEGRAM_CHAT_ID=your-chat-id-here
-```
+3. Add them to `backend/.env` as shown in [Configure environment](#2️⃣-configure-environment-optional)
 
 ### Usage
 
@@ -132,14 +148,26 @@ Returns ranked array with fields: `ticker`, `company`, `sector`, `total_score`, 
 
 ---
 
+## 🧪 Testing
+
+```bash
+cd backend
+pip install -r requirements-dev.txt
+pytest -q
+```
+
+Covers the pure scoring/screening/backtest logic in `scoring.py` and `backtest.py` — no network calls, no API keys required. CI runs this suite on every push and PR.
+
+---
+
 ## ⚠️ Important
 
 - **NOT FINANCIAL ADVICE.** For educational purposes only.
 - Backend fetches live data from Yahoo Finance — initial scan can take **2–5 minutes**.
-- For production deployment, host the FastAPI backend on **Render, Railway, or AWS** and change the `API_URL` in `frontend/src/App.jsx`.
+- For production deployment, host the FastAPI backend on **Render, Railway, or AWS**, then set `VITE_API_URL` (frontend) and `CORS_ORIGINS` (backend) to match — no code changes needed.
 
 ---
 
 ## 📜 License
 
-Personal screening tool. Not financial advice.
+MIT — see [LICENSE](LICENSE).
